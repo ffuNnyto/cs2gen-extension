@@ -4,40 +4,25 @@ function steamInventory() {
 
     const observer = new MutationObserver((mutationsList, observer) => {
 
-        for (let mutation of mutationsList) {
+        const target = mutationsList[0].target
 
-            const addedNodes = mutation.addedNodes
-
-            addedNodes.forEach((node) => {
-
-                if (node.className === 'btn_small btn_grey_white_innerfade') {
-
-                    if (!getCSInventory())
-                        return;
+        if (target.classList[1] !== 'app730')
+            return
 
 
-                    let buttonGen = createButton();
+        let inspectButton = target.querySelector('.btn_small.btn_grey_white_innerfade')
+        let buttonGen = createButton();
 
-                    buttonGen.onclick = () => {
-                        let inspectLink = node.getAttribute('href')
-                        makeApiRequest(inspectLink, (encryptedText) => getGen(encryptedText));
-                    }
-
-                    node.parentNode.appendChild(buttonGen)
-                }
-            })
-
+        buttonGen.onclick = () => {
+            let inspectLink = inspectButton.getAttribute('href')
+            makeApiRequest(inspectLink, (encryptedText) => getGen(encryptedText));
         }
+
+        inspectButton.parentNode.appendChild(buttonGen)
+
     });
 
-    observer.observe(targetDiv, { childList: true, attributes: true, subtree: true })
-}
-
-function getCSInventory() {
-
-    let logo = document.querySelector('#inventory_applogo')
-    return logo.getAttribute('src').includes('/730/')
-
+    observer.observe(targetDiv, { attributes: true, attributeFilter: ['class'], subtree: true })
 }
 
 function createButton() {
