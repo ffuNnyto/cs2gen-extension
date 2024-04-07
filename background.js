@@ -1,5 +1,3 @@
-
-
 chrome.webNavigation.onHistoryStateUpdated.addListener(function(details) {
 
     chrome.tabs.query({ active: true, currentWindow: true }, function (tabs) {
@@ -12,6 +10,8 @@ chrome.webNavigation.onCompleted.addListener(function (details) {
 
 
     let url = new URL(details.url)
+
+    
 
     if (url.pathname==='/search' && url.host==='csfloat.com') {
 

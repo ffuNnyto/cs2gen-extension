@@ -38,14 +38,28 @@ function buff163Ready() {
                     let btn = document.createElement('span')
 
                     btn.onclick = async () => {
+
+                        let spanContent = document.getElementById(`#copy-gen-${idx}`)
+                        spanContent.textContent = 'WAIT'
+                        
                         buffRequest(JSON.parse(dataInfo).assetid, async (response) => {
-                            
+
                             let dataIndex = response.indexOf('data:');
                             let commaIndex = response.indexOf(',', dataIndex);
                             let inspectLink = response.substring(dataIndex + 6, commaIndex);
 
-                            await makeApiRequest(inspectLink, (encryptedText) => getGen(encryptedText));
+                            await makeApiRequest(inspectLink, (encryptedText) => {
+                                getGen(encryptedText)
+                                spanContent.textContent = 'DONE'
+
+                                let timeOut = setTimeout(()=> {
+                                    spanContent.textContent = 'copy !gen'
+                                    clearTimeout(timeOut)
+                                },1000)
+                            })
                         });
+
+
                     };
 
                     Object.assign(btn.style, {
@@ -65,8 +79,8 @@ function buff163Ready() {
 
                     btn.innerHTML = `
                     <span class="inspect_gen_gl">
-                        <b><i class="icon icon_game"></i></b>
-                        copy !gen
+                        <b><i class="icon icon_arrow"></i></b>
+                        <span id="#copy-gen-${idx}">copy !gen</span>
                     </span>
                     `
 
