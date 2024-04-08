@@ -1,107 +1,81 @@
-function loadBitSkins() {
+
+function createGenButton(itemMenu) {
+
+    const settingsButton = itemMenu.querySelector('.btn.btn-primary.btn-om.btn-more');
+
+    settingsButton.addEventListener('click', () => {
+
+        const itemLinks = document.querySelector('.item-links');
+
+        if (!itemLinks || itemLinks.querySelector('#gen_bit_button'))
+            return;
 
 
-    console.log('[BITSKINS_READY]')
+        const genButton = document.createElement('div');
 
-    const targetDiv = document.querySelector('body');
+        genButton.id = 'gen_bit_button';
 
-    const observer = new MutationObserver((mutationsList, observer) => {
+        const inspectLink = itemLinks.childNodes[4].getAttribute('href');
 
-        let findItemsContent = mutationsList.find((mutation) => mutation.target.className.includes('items-content'))
+        genButton.onclick = () => makeApiRequest(inspectLink, (encryptedText) => getGen(encryptedText));
 
-        if (findItemsContent) {
-
-            let marketItems = findItemsContent.target.childNodes[3]
-            if (!marketItems.className.includes('market-items'))
-                return;
-
-            let children = marketItems.childNodes
-
-            children.forEach((node) => {
-
-                let itemCard = node.childNodes[1]
-
-                if (!itemCard)
-                    return
-
-                let settingsButton = itemCard.childNodes[0].childNodes[4]
-
-                settingsButton.addEventListener('click', () => {
-
-                    let itemLinks = document.querySelector('.item-links')
-                    let genButton = document.createElement('div')
-
-
-                    genButton.onclick = () =>
-                        makeApiRequest(inspectLink, (encryptedText) => getGen(encryptedText));
-
-                    genButton.innerHTML = `
-                            <span class="flex-row" rel="nofollow noopener noreferrer" target="_blank">
-                                <img src="/assets/external-link-daf0fe40.svg" class="mr-15" alt="icon">
-                                <span>Copy !gen</span>
-                            </span>
-                        `
-                    itemLinks.appendChild(genButton)
-                    let inspectLink = itemLinks.childNodes[4].getAttribute('href')
-
-                })
-            })
-        }
-
+        genButton.innerHTML = `
+            <span class="flex-row" rel="nofollow noopener noreferrer" target="_blank">
+                <img src="/assets/external-link-daf0fe40.svg" class="mr-15" alt="icon">
+                <span>Copy !gen</span>
+            </span>
+        `;
+        itemLinks.appendChild(genButton);
 
     });
 
-    observer.observe(targetDiv, { childList: true, attributes: true, subtree: true })
-
-
-
-    /*console.log('[BITSKINS_READY]')
-    
-    const targetDiv = document.querySelector('body')
-
-    targetDiv.addEventListener('DOMNodeInserted', function (event) {
-
-
-        if (event.target.className === 'market-items') {
-
-            let children = event.target.childNodes
-
-            children.forEach((node) => {
-
-                let btn = node.childNodes[1]
-
-                if (!btn)
-                    return
-
-
-                let optionButton = btn.childNodes[0].childNodes[4]
-
-                optionButton.addEventListener('click', () => {
-
-                    let itemLinks = document.querySelector('.item-links')
-                    let genButton = document.createElement('div')
-
-
-                    genButton.onclick = () =>
-                        makeApiRequest(inspectLink, (encryptedText) => getGen(encryptedText));
-
-                    genButton.innerHTML = `
-                        <span class="flex-row" rel="nofollow noopener noreferrer" target="_blank">
-                            <img src="/assets/external-link-daf0fe40.svg" class="mr-15" alt="icon">
-                            <span>Copy !gen</span>
-                        </span>
-                    `
-                    itemLinks.appendChild(genButton)
-                    let inspectLink = itemLinks.childNodes[4].getAttribute('href')
-
-                })
-            })
-        }
-    });*/
-
-
-
 }
 
+
+function marketItemsMutationHandler(mutationsList) {
+    for (let mutation of mutationsList) {
+        if (mutation.target.innerHTML.includes('market-items')) {
+            const itemCards = mutation.target.querySelector('.market-items');
+            itemCards.childNodes.forEach((itemCard) => {
+                const itemMenu = itemCard.childNodes[1];
+                if (!itemMenu) return;
+                createGenButton(itemMenu);
+            });
+        }
+    }
+}
+
+
+function observeMarketItems() {
+    const targetDiv = document.querySelector('.items-content');
+    const observer = new MutationObserver(marketItemsMutationHandler);
+    observer.observe(targetDiv, { childList: true, attributes: true, attributeFilter: ['class'] });
+}
+
+
+function availableItemsMutationHandler(node) {
+    const itemCards = node.childNodes[3];
+    itemCards.childNodes.forEach((itemCard) => {
+        const itemMenu = itemCard.childNodes[1];
+        if (!itemMenu) return;
+        createGenButton(itemMenu);
+    });
+}
+
+
+function loadBitSkins() {
+    console.log('[BITSKINS_READY]');
+    const observer = new MutationObserver((mutationsList, observer) => {
+        for (let mutation of mutationsList) {
+            if (mutation.type === 'childList' && document.querySelector('.market-items')) {
+                availableItemsMutationHandler(mutation.target);
+                observeMarketItems();
+                observer.disconnect();
+                break;
+            }
+        }
+    });
+    observer.observe(document.body, { childList: true, subtree: true });
+}
 
 loadBitSkins();

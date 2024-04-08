@@ -2,7 +2,7 @@ chrome.runtime.onMessage.addListener(function (message, sender, sendResponse) {
 
     const actions = {
         'csfloat_market_loaded': csfloatReady,
-        'csfloat_db_loaded': () => { csfloatdbReady(); },
+        'csfloat_db_loaded': csfloatdbReady,
         'web_url_changed': ({ url }) => {
             const { pathname } = new URL(url);
             if (pathname === '/search') csfloatReady();
