@@ -1,15 +1,15 @@
 
 
 function createGButton(node) {
+    
+    if (!node || node.querySelector('.db-class-gen'))
+        return;
 
-    if (!node) return;
-    if (node.querySelector('.db-class-gen')) return;
+    const inspectButton = node.querySelector('a[href^="steam"]');
 
-    const inspectElementA = node.querySelector('a[href^="steam"]');
+    if (!inspectButton) return;
 
-    if (!inspectElementA) return;
-
-    const inspectLink = inspectElementA.getAttribute('href');
+    const inspectLink = inspectButton.getAttribute('href');
     const genBtn = document.createElement('div');
 
     genBtn.className = 'db-class-gen';
@@ -27,28 +27,48 @@ function createGButton(node) {
         </div>
     `;
 
-    node.firstChild.appendChild(genBtn);
+
+
+    node.querySelector('.actions').appendChild(genBtn)
 }
 
+function trackTable() {
+
+    const targetDiv = document.querySelector('tbody[role="rowgroup"]')
+    const observer = new MutationObserver((mutationsList, observer) => {
+
+        for (var mutation of mutationsList) {
+            var newNode = mutation.addedNodes[0]
+            createGButton(newNode)
+        }
+    })
+    observer.observe(targetDiv, { childList: true })
+
+}
+
+function csfloatdbReady() {
+    const observer = new MutationObserver((mutationsList, observer) => {
+        for (let mutation of mutationsList) {
+            if (mutation.type === 'childList') {
+                if (document.querySelector('tbody[role="rowgroup"]')) {
+                    availableItems();
+                    trackTable();
+                    observer.disconnect();
+                    break;
+                }
+            }
+        }
+    })
+    observer.observe(document.body, { childList: true, subtree: true });
+
+
+}
 
 function availableItems() { //when /db open its already with renderized items
 
     const targetTBody = document.querySelector('tbody[role="rowgroup"]');
     let children = targetTBody.childNodes;
     children.forEach((node) => createGButton(node.childNodes[6]))
-}
-
-
-
-function csfloatdbReady() {
-
-    const targetDiv = document.querySelector('app-float-dbtable');
-    targetDiv.addEventListener('DOMNodeInserted', function (event) {
-        if (event.target && event.target.nodeName === 'TR')
-            setTimeout(() => createGButton(event.target.childNodes[6]), 500);
-    });
-
-
 }
 
 
