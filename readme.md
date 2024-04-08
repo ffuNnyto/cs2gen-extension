@@ -10,5 +10,5 @@ extension link: https://chromewebstore.google.com/detail/cs2-copy-gen/chhjlbegla
 
 #### What we use to get gen command
 
-we use https://cs2inspects.com/fr API
+we use https://cs2inspects.com/ API
 

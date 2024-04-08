@@ -1,5 +1,7 @@
 function steamInventory() {
 
+    console.log('[STEAM_INVENTORY_READY]');
+
     const targetDiv = document.querySelector('.inventory_page_right');
 
     const observer = new MutationObserver((mutationsList, observer) => {

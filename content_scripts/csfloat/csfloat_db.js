@@ -47,6 +47,7 @@ function trackTable() {
 }
 
 function csfloatdbReady() {
+    console.log('[CSFLOAT_DB_READY]');
     const observer = new MutationObserver((mutationsList, observer) => {
         for (let mutation of mutationsList) {
             if (mutation.type === 'childList') {

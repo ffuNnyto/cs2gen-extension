@@ -23,6 +23,7 @@ chrome.runtime.onMessage.addListener(function (message, sender, sendResponse) {
 
 
 function csfloatReady() {
+    console.log('[CSFLOAT_READY]');
     const targetDiv = document.querySelector('app-item-container');
     const observer = new MutationObserver(handleMutations);
     observer.observe(targetDiv, { childList: true });
