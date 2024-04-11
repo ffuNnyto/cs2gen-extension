@@ -1,4 +1,13 @@
 
+chrome.runtime.onMessage.addListener(function (message, sender, sendResponse) {
+    if (message.action === 'bitskins_loaded')
+        loadBitSkins();
+    else if (message.action === 'web_url_changed')
+        loadBitSkins();
+});
+
+
+
 function createGenButton(itemMenu) {
 
     const settingsButton = itemMenu.querySelector('.btn.btn-primary.btn-om.btn-more');
@@ -77,5 +86,3 @@ function loadBitSkins() {
     });
     observer.observe(document.body, { childList: true, subtree: true });
 }
-
-loadBitSkins();
