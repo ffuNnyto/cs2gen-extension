@@ -36,7 +36,7 @@ function createButton() {
         display: 'inline-block',
         border: ' 1px solid #e6e6e6',
         color: 'black',
-        borderRadius: '12px',
+        borderRadius: '2px',
         fontSize: ' 12px',
         padding: '2px 6px',
         lineHeight: '18px',
@@ -46,7 +46,7 @@ function createButton() {
         whiteSpace: 'nowrap'
     })
 
-    buttonGen.innerHTML = `<div><span>Copy !Gen</span></div>`
+    buttonGen.innerHTML = `<div class="get-gen"><span>Copy !Gen</span></div>`
 
     return buttonGen;
 
