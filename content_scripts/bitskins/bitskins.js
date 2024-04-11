@@ -1,7 +1,19 @@
 
+chrome.runtime.onMessage.addListener(function (message, sender, sendResponse) {
+    if (message.action === 'bitskins_loaded')
+        loadBitSkins();
+    else if (message.action === 'web_url_changed')
+        loadBitSkins();
+});
+
+
+
 function createGenButton(itemMenu) {
 
     const settingsButton = itemMenu.querySelector('.btn.btn-primary.btn-om.btn-more');
+
+    if (!settingsButton)
+        return
 
     settingsButton.addEventListener('click', () => {
 
@@ -21,7 +33,7 @@ function createGenButton(itemMenu) {
 
         genButton.innerHTML = `
             <span class="flex-row" rel="nofollow noopener noreferrer" target="_blank">
-                <img src="/assets/external-link-daf0fe40.svg" class="mr-15" alt="icon">
+                <img src="/assets/info-gray-5a6a0f8f.svg" class="mr-15" alt="icon">
                 <span>Copy !gen</span>
             </span>
         `;
@@ -77,5 +89,3 @@ function loadBitSkins() {
     });
     observer.observe(document.body, { childList: true, subtree: true });
 }
-
-loadBitSkins();
