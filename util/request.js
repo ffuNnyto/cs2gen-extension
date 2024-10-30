@@ -1,7 +1,13 @@
-async function makeApiRequest(inspectLink, callBack) {
-    try {
-        const response = await fetch(`https://corsproxy.io/?https://api.cs2inspects.com/getGenCode2?url=${inspectLink}`);
+const requestUrls = [
+    'https://corsproxy.io/?https://api.cs2inspects.com/getGenCode2?url=',
+    'https://buff.163.com/api/market/cs2_inspect?'
 
+]
+
+async function makeApiRequest(r, inspectLink, callBack) {
+    try {
+        //const response = await fetch(`https://corsproxy.io/?https://api.cs2inspects.com/getGenCode2?url=${inspectLink}`);
+        const response = await fetch(r == true ? requestUrls[0] + inspectLink : requestUrls[1] + `assetid=${inspectLink}&_=1`);
         if (!response.ok) {
             throw new Error('Invalid request ' + response.status);
         }
@@ -26,5 +32,5 @@ async function makeApiRequest(inspectLink, callBack) {
 }
 
 async function buffRequest(assetId, callBack) {
-    return makeApiRequest(`https://buff.163.com/api/market/cs2_inspect?assetid=${assetId}&_=${+Date.now()}`,callBack);
+    return makeApiRequest(false, assetId, callBack);
 }

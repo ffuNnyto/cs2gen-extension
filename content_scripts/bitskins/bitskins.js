@@ -29,7 +29,7 @@ function createGenButton(itemMenu) {
 
         const inspectLink = itemLinks.childNodes[4].getAttribute('href');
 
-        genButton.onclick = () => makeApiRequest(inspectLink, (encryptedText) => getGen(encryptedText));
+        genButton.onclick = () => makeApiRequest(true,inspectLink, (encryptedText) => getGen(encryptedText));
 
         genButton.innerHTML = `
             <span class="flex-row" rel="nofollow noopener noreferrer" target="_blank">

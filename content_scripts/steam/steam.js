@@ -17,7 +17,7 @@ function steamInventory() {
 
         buttonGen.onclick = () => {
             let inspectLink = inspectButton.getAttribute('href')
-            makeApiRequest(inspectLink, (encryptedText) => getGen(encryptedText));
+            makeApiRequest(true,inspectLink, (encryptedText) => getGen(encryptedText));
         }
 
         inspectButton.parentNode.appendChild(buttonGen)

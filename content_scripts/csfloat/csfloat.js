@@ -52,7 +52,7 @@ function addGenButton(itemCard) {
 
     genBtn.addEventListener('click', (event) => {
         event.stopPropagation();
-        makeApiRequest(inspectLink, (encryptedText) => getGen(encryptedText));
+        makeApiRequest(true, inspectLink, (encryptedText) => getGen(encryptedText));
     });
 
     detailButtons.append(genBtn);

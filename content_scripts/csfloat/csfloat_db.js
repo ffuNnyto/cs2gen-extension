@@ -15,7 +15,7 @@ function createGButton(node) {
     genBtn.className = 'db-class-gen';
     genBtn.onclick = (event) => {
         event.stopPropagation();
-        makeApiRequest(inspectLink, (encryptedText) => getGen(encryptedText));
+        makeApiRequest(true,inspectLink, (encryptedText) => getGen(encryptedText));
     };
 
     genBtn.innerHTML = `

@@ -13,11 +13,12 @@ function addButtonOnClickHandler(btn, idx, dataInfo) {
         spanContent.textContent = 'WAIT';
 
         buffRequest(JSON.parse(dataInfo).assetid, async (response) => {
+            
             let dataIndex = response.indexOf('data:');
             let commaIndex = response.indexOf(',', dataIndex);
             let inspectLink = response.substring(dataIndex + 6, commaIndex);
 
-            await makeApiRequest(inspectLink, (encryptedText) => {
+            await makeApiRequest(true,inspectLink, (encryptedText) => {
                 getGen(encryptedText);
                 spanContent.textContent = 'DONE';
 
