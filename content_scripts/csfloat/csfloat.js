@@ -63,9 +63,9 @@ function createGenButton(inspectLink) {
     genBtn.innerText = '!g';
     genBtn.className = 'gen-btn';
     genBtn.innerHTML = `
-        <span _ngcontent-ng-c2631012479="" mattooltip="Inspect In-Game" class="mat-mdc-tooltip-trigger action inspect-link ng-star-inserted" aria-describedby="cdk-describedby-message-ng-1-415" cdk-describedby-host="ng-1" style="">
+        <div _ngcontent-ng-c3060430395="" mattooltip="Inspect In-Game" class="mat-mdc-tooltip-trigger action inspect-link ng-star-inserted" aria-describedby="cdk-describedby-message-ng-1-415" cdk-describedby-host="ng-1" style="">
             <span _ngcontent-ng-c2631012479="">!g</span>
-        </span>
+        </div>
     `;
     return genBtn;
 }

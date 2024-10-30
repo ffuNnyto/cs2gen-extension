@@ -33,7 +33,7 @@ function createGenButton(itemMenu) {
 
         genButton.innerHTML = `
             <span class="flex-row" rel="nofollow noopener noreferrer" target="_blank">
-                <img src="/assets/info-gray-5a6a0f8f.svg" class="mr-15" alt="icon">
+                <img src="/assets/arrow-full-right-white-J3wjj7Av.svg" class="mr-15" alt="icon">
                 <span>Copy !gen</span>
             </span>
         `;
