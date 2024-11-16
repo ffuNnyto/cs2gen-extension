@@ -9,25 +9,38 @@ chrome.runtime.onMessage.addListener(function (message, sender, sendResponse) {
 
 function addButtonOnClickHandler(btn, idx, dataInfo) {
     btn.onclick = async () => {
-        let spanContent = document.getElementById(`#copy-gen-${idx}`);
-        spanContent.textContent = 'WAIT';
+        let spanContent = document.querySelector(`.copy-gen-${idx}`);
+
+        if(spanContent.id.startsWith("!g")) {
+
+            copyToClipBoard(spanContent.id);
+            return;
+        }
+
+
+       
+        
+        handleLoader(true,spanContent)
 
         buffRequest(JSON.parse(dataInfo).assetid, async (response) => {
-            
+
+          
+           
+
             let dataIndex = response.indexOf('data:');
             let commaIndex = response.indexOf(',', dataIndex);
             let inspectLink = response.substring(dataIndex + 6, commaIndex);
 
-            await makeApiRequest(true,inspectLink, (encryptedText) => {
-                getGen(encryptedText);
-                spanContent.textContent = 'DONE';
-
-                let timeOut = setTimeout(() => {
-                    spanContent.textContent = 'copy !gen';
-                    clearTimeout(timeOut);
-                }, 1000);
+            await makeApiRequest(true, inspectLink,async (encryptedText) => {
+                const gen = await getGen(encryptedText);
+                spanContent.id=gen;
+                copyToClipBoard(gen);
+                handleLoader(false,spanContent)
             });
+
+           
         });
+       
     };
 }
 
@@ -51,8 +64,8 @@ function createButton(idx) {
 
     btn.innerHTML = `
         <span class="inspect_gen_gl">
-            <b><i class="icon icon_arrow"></i></b>
-            <span id="#copy-gen-${idx}">copy !gen</span>
+            <b><i class="icon "></i></b>
+            <span id="" class="copy-gen-${idx}">copy !gen</span>
         </span>
     `;
 
@@ -74,10 +87,16 @@ function processTableRow(node, idx) {
     }
 }
 
+
+function handleLoader(status, targetId) {
+    targetId.innerHTML = status ? `<div class="loader"></div>` : "copy !gen";
+}
+
 function buff163Ready() {
     console.log('[BUFF163_READY]');
     const targetDiv = document.querySelector('.detail-tab-cont');
     const observer = new MutationObserver((mutationsList, observer) => {
+
         if (targetDiv.innerHTML.includes('showLoading')) {
             return;
         }
@@ -89,5 +108,4 @@ function buff163Ready() {
     });
 
     observer.observe(targetDiv, { childList: true });
-
 }

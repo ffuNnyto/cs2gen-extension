@@ -15,9 +15,34 @@ function steamInventory() {
         let inspectButton = target.querySelector('.btn_small.btn_grey_white_innerfade')
         let buttonGen = createButton();
 
+       
+
+      
+
+
+
+
         buttonGen.onclick = () => {
+
+            if (buttonGen.id.startsWith("!g")) {
+                copyToClipBoard(buttonGen.id);
+                return;
+            }
+
+            handleLoader(true, buttonGen);
+
             let inspectLink = inspectButton.getAttribute('href')
-            makeApiRequest(true,inspectLink, (encryptedText) => getGen(encryptedText));
+
+            makeApiRequest(true, inspectLink, async (encryptedText) => {
+                try {
+                    const gen = await getGen(encryptedText);
+                    buttonGen.id = gen;
+                    copyToClipBoard(gen);
+                    handleLoader(false, buttonGen);
+                } catch (error) {
+                    console.error('Error generating code:', error);
+                }
+            });
         }
 
         inspectButton.parentNode.appendChild(buttonGen)
@@ -27,7 +52,7 @@ function steamInventory() {
     observer.observe(targetDiv, { attributes: true, attributeFilter: ['class'], subtree: true })
 }
 
-function createButton() {
+function createButton(idx) {
 
     let buttonGen = document.createElement('button')
 
@@ -46,12 +71,14 @@ function createButton() {
         whiteSpace: 'nowrap'
     })
 
-    buttonGen.innerHTML = `<div class="get-gen"><span>Copy !Gen</span></div>`
+    buttonGen.innerHTML = `<div id="" class="get-gen"><span>Copy !Gen</span></div>`
 
     return buttonGen;
 
 }
-
+function handleLoader(status, targetId) {
+    targetId.innerHTML = status ? `<div class="loader"></div>` : "Copy !gen";
+}
 steamInventory();
 
 

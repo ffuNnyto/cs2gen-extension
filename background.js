@@ -7,7 +7,7 @@ chrome.webNavigation.onCompleted.addListener(function (details) {
 
     let url = new URL(details.url)
 
-    if (url.pathname === '/search' && url.host === 'csfloat.com') {
+    if ((url.pathname === '/search' || url.pathname === '/profile/watchlist') && url.host === 'csfloat.com') {
 
         sendTabMessage({ action: 'csfloat_market_loaded', url: details.url })
     }

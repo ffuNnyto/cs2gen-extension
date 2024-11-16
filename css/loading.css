@@ -1,0 +1,32 @@
+.loader {
+    width: 30px;
+    aspect-ratio: 1;
+    display: grid;
+    border-radius: 50%;
+    background:
+      linear-gradient(0deg, rgba(255, 255, 255, 0.5) 30%, #0000 0 70%, rgba(255, 255, 255, 1) 0) 50%/6% 100%, /* Blanco */
+      linear-gradient(90deg, rgba(255, 0, 0, 0.25) 30%, #0000 0 70%, rgba(0, 0, 255, 0.75) 0) 50%/100% 6%; /* Rojo y Azul */
+    background-repeat: no-repeat;
+    animation: l23 1s infinite steps(12);
+}
+
+.loader::before,
+.loader::after {
+    content: "";
+    grid-area: 1/1;
+    border-radius: 50%;
+    background: inherit;
+    opacity: 0.915;
+    transform: rotate(30deg);
+}
+
+.loader::after {
+    opacity: 0.83;
+    transform: rotate(60deg);
+}
+
+@keyframes l23 {
+    100% {
+        transform: rotate(1turn);
+    }
+}
