@@ -93,6 +93,9 @@ function handleLoader(status, targetId) {
 }
 
 function buff163Ready() {
+
+    
+
     console.log('[BUFF163_READY]');
     const targetDiv = document.querySelector('.detail-tab-cont');
     const observer = new MutationObserver((mutationsList, observer) => {
@@ -108,4 +111,5 @@ function buff163Ready() {
     });
 
     observer.observe(targetDiv, { childList: true });
+    createToastContainer();
 }

@@ -35,6 +35,8 @@ function csfloatReady() {
     const targetDiv = document.querySelector('app-item-container');
     const observer = new MutationObserver(handleMutations);
     observer.observe(targetDiv, { childList: true });
+    createToastContainer();
+
 
 
 }
@@ -105,10 +107,21 @@ async function handleGenButtonClick(event, genBtn, inspectLink, idx) {
 
     makeApiRequest(true, inspectLink, async (encryptedText) => {
         try {
+
+
+           
+
+
+
+
+
+
             const gen = await getGen(encryptedText);
             genBtn.id = gen;
             copyToClipBoard(gen);
             handleLoader(false, currentTargetId);
+
+
         } catch (error) {
             console.error('Error generating code:', error);
         }

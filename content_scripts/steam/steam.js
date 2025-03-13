@@ -2,7 +2,11 @@ function steamInventory() {
 
     console.log('[STEAM_INVENTORY_READY]');
 
+
+
     const targetDiv = document.querySelector('.inventory_page_right');
+
+
 
     const observer = new MutationObserver((mutationsList, observer) => {
 
@@ -15,9 +19,9 @@ function steamInventory() {
         let inspectButton = target.querySelector('.btn_small.btn_grey_white_innerfade')
         let buttonGen = createButton();
 
-       
 
-      
+
+
 
 
 
@@ -50,6 +54,7 @@ function steamInventory() {
     });
 
     observer.observe(targetDiv, { attributes: true, attributeFilter: ['class'], subtree: true })
+
 }
 
 function createButton(idx) {
@@ -80,5 +85,8 @@ function handleLoader(status, targetId) {
     targetId.innerHTML = status ? `<div class="loader"></div>` : "Copy !gen";
 }
 steamInventory();
+setTimeout(() => {
+    createToastContainer();
+}, 2000)
 
 

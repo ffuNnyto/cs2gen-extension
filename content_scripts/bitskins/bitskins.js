@@ -17,7 +17,7 @@ function createGenButton(itemMenu) {
 
     settingsButton.addEventListener('click', () => {
 
-        const itemLinks = document.querySelector('.item-links');
+        const itemLinks = document.querySelector('.item-links'); //TODO: fix item links
 
         if (!itemLinks || itemLinks.querySelector('#gen_bit_button'))
             return;
@@ -97,4 +97,5 @@ function loadBitSkins() {
         }
     });
     observer.observe(document.body, { childList: true, subtree: true });
+    createToastContainer();
 }

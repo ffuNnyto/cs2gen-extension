@@ -8,24 +8,10 @@ async function getGen(ciphertextHex) {
 
     return JSON.parse(data).genCode;
 
-    /*await decryptText(ciphertextHex, secretKey, iv)
-        .then(plaintext => {
-            
-           let data=JSON.parse(plaintext)
-
-          
-           console.log(data.genCode)
-
-           return data.genCode;
-
-        })
-        .catch(error => {
-            console.error('Error while decrypting text:', error);
-            throw new Error('Failed to get generation code');
-        });*/
-
 }
 
 function copyToClipBoard(txt) {
+
+    throwToast(`!gen copy to clipboard`);
     navigator.clipboard.writeText(String(txt));
 }
