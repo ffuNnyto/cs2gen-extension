@@ -8,11 +8,7 @@ chrome.runtime.onMessage.addListener(function (message, sender, sendResponse) {
             if (pathname === '/search' || pathname==='/profile/watchlist') {
                 csfloatReady();
             }
-            else if (pathname.startsWith("/item/")) {
-                
-                
-               
-            }
+            else if (pathname.startsWith("/item/")) { } //TODO: +new target
             else if (pathname === '/db') csfloatdbReady();
         }
     }
@@ -25,19 +21,12 @@ chrome.runtime.onMessage.addListener(function (message, sender, sendResponse) {
     handleAction(message);
 });
 
-
-
-
-
-
 function csfloatReady() {
     console.log('[CSFLOAT_READY]');
     const targetDiv = document.querySelector('app-item-container');
     const observer = new MutationObserver(handleMutations);
     observer.observe(targetDiv, { childList: true });
     createToastContainer();
-
-
 
 }
 
@@ -68,29 +57,6 @@ function addGenButton(itemCard, idx) {
     genBtn.addEventListener('click', async (event) => handleGenButtonClick(event, genBtn, inspectLink, idx));
 
     detailButtons.append(genBtn);
-
-    /*itemCard.addEventListener('click', () => {
-        const observer = new MutationObserver((mutationsList, observer) => {
-             const popupWindow = document.querySelector('.grid-item');
- 
-             if (popupWindow) {
- 
-                 observer.disconnect();
- 
-                 popupWindow.addEventListener('load', () => { });
-                 console.log(popupWindow)
- 
-                 const genBtn2 = createGenButton(idx);
-                 genBtn2.addEventListener('click', async (event) => handleGenButtonClick(event, genBtn2, inspectLink, idx));
- 
- 
-                 popupWindow.querySelector('.detail-buttons').append(genBtn2)
-             }
-         });
-         observer.observe(document.body, { childList: true, subtree: true });
-
-
-    })*/
 }
 
 async function handleGenButtonClick(event, genBtn, inspectLink, idx) {
@@ -107,15 +73,6 @@ async function handleGenButtonClick(event, genBtn, inspectLink, idx) {
 
     makeApiRequest(true, inspectLink, async (encryptedText) => {
         try {
-
-
-           
-
-
-
-
-
-
             const gen = await getGen(encryptedText);
             genBtn.id = gen;
             copyToClipBoard(gen);

@@ -1,12 +1,9 @@
-
 chrome.runtime.onMessage.addListener(function (message, sender, sendResponse) {
     if (message.action === 'bitskins_loaded')
         loadBitSkins();
     else if (message.action === 'web_url_changed')
         loadBitSkins();
 });
-
-
 
 function createGenButton(itemMenu) {
 
@@ -52,7 +49,6 @@ function createGenButton(itemMenu) {
 
 }
 
-
 function marketItemsMutationHandler(mutationsList) {
     for (let mutation of mutationsList) {
         if (mutation.target.innerHTML.includes('market-items')) {
@@ -66,13 +62,11 @@ function marketItemsMutationHandler(mutationsList) {
     }
 }
 
-
 function observeMarketItems() {
     const targetDiv = document.querySelector('.items-content');
     const observer = new MutationObserver(marketItemsMutationHandler);
     observer.observe(targetDiv, { childList: true, attributes: true, attributeFilter: ['class'] });
 }
-
 
 function availableItemsMutationHandler(node) {
     const itemCards = node.childNodes[3];
@@ -82,7 +76,6 @@ function availableItemsMutationHandler(node) {
         createGenButton(itemMenu);
     });
 }
-
 
 function loadBitSkins() {
     console.log('[BITSKINS_READY]');

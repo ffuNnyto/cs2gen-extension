@@ -6,8 +6,8 @@ chrome.runtime.onMessage.addListener(function (message, sender, sendResponse) {
         buff163Ready();
 });
 
-
 function addButtonOnClickHandler(btn, idx, dataInfo) {
+
     btn.onclick = async () => {
         let spanContent = document.querySelector(`.copy-gen-${idx}`);
 
@@ -16,16 +16,10 @@ function addButtonOnClickHandler(btn, idx, dataInfo) {
             copyToClipBoard(spanContent.id);
             return;
         }
-
-
-       
         
         handleLoader(true,spanContent)
 
         buffRequest(JSON.parse(dataInfo).assetid, async (response) => {
-
-          
-           
 
             let dataIndex = response.indexOf('data:');
             let commaIndex = response.indexOf(',', dataIndex);
@@ -87,14 +81,11 @@ function processTableRow(node, idx) {
     }
 }
 
-
 function handleLoader(status, targetId) {
     targetId.innerHTML = status ? `<div class="loader"></div>` : "copy !gen";
 }
 
 function buff163Ready() {
-
-    
 
     console.log('[BUFF163_READY]');
     const targetDiv = document.querySelector('.detail-tab-cont');

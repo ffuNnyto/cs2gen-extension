@@ -84,8 +84,6 @@ function csfloatdbReady() {
     })
     observer.observe(document.body, { childList: true, subtree: true });
     createToastContainer();
-
-
 }
 
 function availableItems() { //when /db open its already with renderized items

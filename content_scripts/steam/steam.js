@@ -1,13 +1,7 @@
 function steamInventory() {
 
     console.log('[STEAM_INVENTORY_READY]');
-
-
-
     const targetDiv = document.querySelector('.inventory_page_right');
-
-
-
     const observer = new MutationObserver((mutationsList, observer) => {
 
         const target = mutationsList[0].target
@@ -15,16 +9,8 @@ function steamInventory() {
         if (target.classList[1] !== 'app730')
             return
 
-
         let inspectButton = target.querySelector('.btn_small.btn_grey_white_innerfade')
         let buttonGen = createButton();
-
-
-
-
-
-
-
 
         buttonGen.onclick = () => {
 
@@ -48,11 +34,9 @@ function steamInventory() {
                 }
             });
         }
-
         inspectButton.parentNode.appendChild(buttonGen)
 
     });
-
     observer.observe(targetDiv, { attributes: true, attributeFilter: ['class'], subtree: true })
 
 }
