@@ -6,7 +6,7 @@ A Chrome extension that adds a **`!gen` copy button** to CS2 skin marketplaces, 
 
 | Site | Status |
 |------|--------|
-| [CSFloat](https://csfloat.com) — `/search`, `/profile/watchlist`, `/db` | ✅ |
+| [CSFloat](https://csfloat.com) — `/search`, `/watchlist`, `/db` | ✅ |
 | [Buff163](https://buff.163.com) | ✅ |
 | [BitSkins](https://bitskins.com) | ⚠️ |
 | [Steam Inventory](https://steamcommunity.com/*/inventory) | ✅ |
