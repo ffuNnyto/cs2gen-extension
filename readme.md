@@ -72,7 +72,6 @@ The background script uses `@protobuf-ts/runtime` and must be bundled with esbui
 
 ```bash
 npm run build    # one-time build
-npm run watch    # watch mode during development
 ```
 
 Output goes to `dist/background.js`, which is what the manifest loads.
