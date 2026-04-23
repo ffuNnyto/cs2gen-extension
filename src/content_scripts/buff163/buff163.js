@@ -7,40 +7,30 @@ chrome.runtime.onMessage.addListener(function (message, sender, sendResponse) {
 });
 
 function addButtonOnClickHandler(btn, idx, dataInfo) {
-
     btn.onclick = async () => {
-        let spanContent = document.querySelector(`.copy-gen-${idx}`);
+        const span = document.querySelector(`.copy-gen-${idx}`);
 
-        if (spanContent.id.startsWith("!g")) {
-
-            copyToClipBoard(spanContent.id);
+        if (span.id.startsWith('!g')) {
+            copyToClipBoard(span.id);
             return;
         }
 
-        handleLoader(true, spanContent)
+        const assetId = dataInfo ? JSON.parse(dataInfo)?.assetid : null;
+        if (!assetId) return console.error('No assetid found');
 
-        buffRequest(JSON.parse(dataInfo).assetid, async (response) => {
+        handleLoader(true, span);
 
-            let dataIndex = response.indexOf('data:');
-            let commaIndex = response.indexOf(',', dataIndex);
-            let inspectLink = response.substring(dataIndex + 6, commaIndex);
+        buffRequest(assetId, (response) => {
+            const dataIndex = response.indexOf('data:');
+            const inspectLink = response.substring(dataIndex + 5, response.indexOf(',', dataIndex));
 
-            chrome.runtime.sendMessage({ action: "fetch_skin", url: inspectLink }, async (response) => {
-                try {
-                    const gen = await getGen(response);
-                    spanContent.id = gen;
-                    copyToClipBoard(gen);
-                    handleLoader(false, spanContent)
-                } catch (error) {
-                    console.error('Error generating code:', error);
-                }
+            chrome.runtime.sendMessage({ action: 'fetch_skin', url: inspectLink }, ({ code, error }) => {
+                if (error) return console.error('Error generating code:', error);
+                span.id = code;
+                copyToClipBoard(code);
+                handleLoader(false, span);
             });
-
-
-
-
         });
-
     };
 }
 

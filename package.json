@@ -1,0 +1,13 @@
+{
+  "scripts": {
+    "build": "esbuild src/background.js --bundle --outfile=dist/background.js --format=esm --platform=browser",
+    "zip": "npm run build && node scripts/zip.js"
+  },
+  "dependencies": {
+    "@protobuf-ts/runtime": "^2.11.1",
+    "adm-zip": "^0.5.17"
+  },
+  "devDependencies": {
+    "esbuild": "^0.28.0"
+  }
+}

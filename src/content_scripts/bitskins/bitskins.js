@@ -1,96 +1,96 @@
-chrome.runtime.onMessage.addListener(function (message, sender, sendResponse) {
-    if (message.action === 'bitskins_loaded')
-        loadBitSkins();
-    else if (message.action === 'web_url_changed')
-        loadBitSkins();
+chrome.runtime.onMessage.addListener(({ action }) => {
+    if (action === 'bitskins_loaded' || action === 'web_url_changed') loadBitSkins();
 });
 
-function createGenButton(itemMenu) {
+function addGenButton(itemCard) {
+    const wrapper = itemCard.querySelector('.item-wrapper');
+    if (!wrapper || wrapper.querySelector('.gen-bit-btn')) return;
 
-    const settingsButton = itemMenu.querySelector('.btn.btn-primary.btn-om.btn-more');
+    const btn = document.createElement('button');
+    btn.className = 'gen-bit-btn btn btn-primary';
+    btn.innerText = '!gen';
+    btn.style.cssText = 'position:absolute;top:6px;right:6px;z-index:10;font-size:11px;padding:2px 7px;';
 
-    if (!settingsButton)
-        return
+    btn.onclick = async (e) => {
+        e.preventDefault();
+        e.stopPropagation();
 
-    settingsButton.addEventListener('click', () => {
-
-        const itemLinks = document.querySelector('.item-links'); //TODO: fix item links
-
-        if (!itemLinks || itemLinks.querySelector('#gen_bit_button'))
+        if (btn.dataset.gen) {
+            copyToClipBoard(btn.dataset.gen);
             return;
-
-
-        const genButton = document.createElement('div');
-
-        genButton.id = 'gen_bit_button';
-
-        const inspectLink = itemLinks.childNodes[4].getAttribute('href');
-
-        genButton.onclick = () => {
-
-            chrome.runtime.sendMessage({ action: "fetch_skin", url: inspectLink }, async (response) => {
-                try {
-                    const gen = await getGen(response);
-                    copyToClipBoard(gen);
-                } catch (error) {
-                    console.error('Error generating code:', error);
-                }
-            });
-
         }
 
-        genButton.innerHTML = `
-            <span class="flex-row" rel="nofollow noopener noreferrer" target="_blank">
-                <img src="/assets/arrow-full-right-white-J3wjj7Av.svg" class="mr-15" alt="icon">
-                <span>Copy !gen</span>
-            </span>
-        `;
-        itemLinks.appendChild(genButton);
+        btn.innerText = '...';
 
-    });
+       
+        const btnMore = itemCard.querySelector('.btn-more');
+        if (!btnMore) { btn.innerText = '!gen'; return; }
+        btnMore.click();
 
+      
+        const inspectLink = await waitForInspectLink();
+
+      
+        btnMore.click();
+
+        if (!inspectLink) {
+            btn.innerText = 'N/A';
+            return;
+        }
+
+        chrome.runtime.sendMessage({ action: 'fetch_skin', url: inspectLink }, ({ code, error }) => {
+            if (error) { btn.innerText = 'err'; return console.error(error); }
+            btn.dataset.gen = code;
+            btn.innerText = '!gen';
+            copyToClipBoard(code);
+        });
+    };
+
+    wrapper.style.position = 'relative';
+    wrapper.appendChild(btn);
 }
 
-function marketItemsMutationHandler(mutationsList) {
-    for (let mutation of mutationsList) {
-        if (mutation.target.innerHTML.includes('market-items')) {
-            const itemCards = mutation.target.querySelector('.market-items');
-            itemCards.childNodes.forEach((itemCard) => {
-                const itemMenu = itemCard.childNodes[1];
-                if (!itemMenu) return;
-                createGenButton(itemMenu);
-            });
-        }
-    }
+function waitForInspectLink(timeout = 3000) {
+    return new Promise((resolve) => {
+        const start = Date.now();
+        const interval = setInterval(() => {
+            const link = document.querySelector('.item-links a[href^="steam://rungame"]');
+            if (link) {
+                console.log(link.getAttribute('href'))
+                clearInterval(interval);
+                resolve(link.getAttribute('href'));
+            } else if (Date.now() - start > timeout) {
+                clearInterval(interval);
+                resolve(null);
+            }
+        }, 100);
+    });
+}
+
+function processMarketItems() {
+    document.querySelectorAll('.market-items .item').forEach(addGenButton);
 }
 
 function observeMarketItems() {
     const targetDiv = document.querySelector('.items-content');
-    const observer = new MutationObserver(marketItemsMutationHandler);
-    observer.observe(targetDiv, { childList: true, attributes: true, attributeFilter: ['class'] });
-}
+    if (!targetDiv) return;
 
-function availableItemsMutationHandler(node) {
-    const itemCards = node.childNodes[3];
-    itemCards.childNodes.forEach((itemCard) => {
-        const itemMenu = itemCard.childNodes[1];
-        if (!itemMenu) return;
-        createGenButton(itemMenu);
-    });
+    new MutationObserver(() => {
+        document.querySelectorAll('.market-items .item:not(:has(.gen-bit-btn))').forEach(addGenButton);
+    }).observe(targetDiv, { childList: true, subtree: true });
 }
 
 function loadBitSkins() {
-    console.log('[BITSKINS_READY]');
-    const observer = new MutationObserver((mutationsList, observer) => {
-        for (let mutation of mutationsList) {
-            if (mutation.type === 'childList' && document.querySelector('.market-items')) {
-                availableItemsMutationHandler(mutation.target);
-                observeMarketItems();
-                observer.disconnect();
-                break;
-            }
-        }
-    });
-    observer.observe(document.body, { childList: true, subtree: true });
+    new MutationObserver((_, obs) => {
+        if (!document.querySelector('.market-items')) return;
+        obs.disconnect();
+        processMarketItems();
+        observeMarketItems();
+    }).observe(document.body, { childList: true, subtree: true });
+
     createToastContainer();
+}
+
+function handleLoader(el, active) {
+    el.innerHTML = active ? `<div class="loader"></div>` : '!gen';
 }

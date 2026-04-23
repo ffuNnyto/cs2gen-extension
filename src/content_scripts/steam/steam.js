@@ -1,76 +1,66 @@
+function getActiveItemInfo() {
+    return document.querySelector('#iteminfo0[style*="z-index: 1"], #iteminfo1[style*="z-index: 1"]');
+}
+
 function steamInventory() {
-
-    console.log('[STEAM_INVENTORY_READY]');
     const targetDiv = document.querySelector('.inventory_page_right');
-    const observer = new MutationObserver((mutationsList, observer) => {
+    if (!targetDiv) return;
 
-        const target = mutationsList[0].target
+    new MutationObserver(() => {
+        const itemInfo = getActiveItemInfo();
+        if (!itemInfo) return;
 
-        if (target.classList[1] !== 'app730')
-            return
+        if (itemInfo.querySelector('.gen-steam-btn')) return;
 
-        let inspectButton = target.querySelector('.btn_small.btn_grey_white_innerfade')
-        let buttonGen = createButton();
+        const inspectLink = itemInfo.querySelector('a[href^="steam://run/730"]')?.getAttribute('href');
+        if (!inspectLink) return;
 
-        buttonGen.onclick = () => {
-
-            if (buttonGen.id.startsWith("!g")) {
-                copyToClipBoard(buttonGen.id);
+        const btn = createButton();
+        btn.onclick = () => {
+            if (btn.dataset.gen) {
+                copyToClipBoard(btn.dataset.gen);
                 return;
             }
 
-            handleLoader(true, buttonGen);
+            handleLoader(true, btn);
 
-            let inspectLink = inspectButton.getAttribute('href')
-
-            chrome.runtime.sendMessage({ action: "fetch_skin", url: inspectLink }, async (response) => {
-                try {
-                   const gen = await getGen(response);
-                    buttonGen.id = gen;
-                    copyToClipBoard(gen);
-                    handleLoader(false, buttonGen);
-                } catch (error) {
-                    console.error('Error generating code:', error);
-                }
+            chrome.runtime.sendMessage({ action: 'fetch_skin', url: inspectLink }, ({ code, error }) => {
+                if (error) { handleLoader(false, btn); return console.error(error); }
+                btn.dataset.gen = code;
+                handleLoader(false, btn);
+                copyToClipBoard(code);
             });
-        }
-        inspectButton.parentNode.appendChild(buttonGen)
+        };
 
-    });
-    observer.observe(targetDiv, { attributes: true, attributeFilter: ['class'], subtree: true })
+        itemInfo.querySelector('a[href^="steam://run/730"]')?.parentNode?.appendChild(btn);
 
+    }).observe(targetDiv, { childList: true, subtree: true, attributes: true });
 }
 
-function createButton(idx) {
-
-    let buttonGen = document.createElement('button')
-
-    Object.assign(buttonGen.style, {
+function createButton() {
+    const btn = document.createElement('button');
+    btn.className = 'gen-steam-btn';
+    Object.assign(btn.style, {
         cursor: 'pointer',
         display: 'inline-block',
-        border: ' 1px solid #e6e6e6',
+        border: '1px solid #e6e6e6',
         color: 'black',
         borderRadius: '2px',
-        fontSize: ' 12px',
+        fontSize: '12px',
         padding: '2px 6px',
         lineHeight: '18px',
         maxWidth: '120px',
         overflow: 'hidden',
         textOverflow: 'ellipsis',
         whiteSpace: 'nowrap'
-    })
-
-    buttonGen.innerHTML = `<div id="" class="get-gen"><span>Copy !Gen</span></div>`
-
-    return buttonGen;
-
+    });
+    btn.innerHTML = `<span>Copy !Gen</span>`;
+    return btn;
 }
-function handleLoader(status, targetId) {
-    targetId.innerHTML = status ? `<div class="loader"></div>` : "Copy !gen";
+
+function handleLoader(el, active) {
+    el.innerHTML = active ? `<div class="loader"></div>` : 'Copy !Gen';
 }
+
 steamInventory();
-setTimeout(() => {
-    createToastContainer();
-}, 2000)
-
-
+setTimeout(() => createToastContainer(), 2000);

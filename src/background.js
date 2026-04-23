@@ -1,10 +1,12 @@
+import { decodeHex, decodeLink } from "./econ/decode.js";
+import { generateHex } from "./econ/encode.js";
+
+
 chrome.runtime.onInstalled.addListener(() => {
     chrome.declarativeNetRequest.updateDynamicRules({
-       
         removeRuleIds: [1, 2]
     });
 });
-
 
 chrome.webNavigation.onHistoryStateUpdated.addListener((details) => {
     sendTabMessage({ action: 'web_url_changed', url: details.url });
@@ -37,15 +39,17 @@ function sendTabMessage(data) {
     });
 }
 
-
 chrome.runtime.onMessage.addListener((message, sender, sendResponse) => {
     if (message.action === "fetch_skin") {
-        console.log(message.url)
-        const encodedUrl = encodeURIComponent(message.url);
-        fetch(`https://api.cs2inspects.com/getGenCode2?url=${encodedUrl}`)
-            .then(response => response.json())
-            .then(data => sendResponse(data))
-            .catch(err => sendResponse({ error: err.toString() }));
-        return true;
+        try {
+           
+            const econ = decodeLink(message.url);
+            const hex = generateHex(econ);
+            console.log(`Generated hex: ${hex}`);
+            sendResponse({ code: `!g ${hex}` });
+        } catch (err) {
+        
+            sendResponse({ error: err.toString() });
+        }
     }
 });
