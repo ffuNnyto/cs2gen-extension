@@ -47,7 +47,6 @@ function uint32BE(n) {
 }
 
 function encodeSticker(sticker) {
-
     const s = [];
 
     if (sticker.slot !== undefined) {
@@ -55,9 +54,10 @@ function encodeSticker(sticker) {
         writeVarint(sticker.slot, s);
     }
 
-    if (sticker.sticker_id !== undefined) {
+    const stickerId = sticker.sticker_id ?? sticker.stickerId;
+    if (stickerId !== undefined) {
         tag(2, 0, s);
-        writeVarint(sticker.sticker_id, s);
+        writeVarint(stickerId, s);
     }
 
     if (sticker.wear !== undefined) {
@@ -75,24 +75,28 @@ function encodeSticker(sticker) {
         writeFloat32(sticker.rotation, s);
     }
 
-    if (sticker.tint_id !== undefined) {
+    const tintId = sticker.tint_id ?? sticker.tintId;
+    if (tintId !== undefined) {
         tag(6, 0, s);
-        writeVarint(sticker.tint_id, s);
+        writeVarint(tintId, s);
     }
 
-    if (sticker.offset_x !== undefined) {
+    const offsetX = sticker.offset_x ?? sticker.offsetX;
+    if (offsetX !== undefined) {
         tag(7, 5, s);
-        writeFloat32(sticker.offset_x, s);
+        writeFloat32(offsetX, s);
     }
 
-    if (sticker.offset_y !== undefined) {
+    const offsetY = sticker.offset_y ?? sticker.offsetY;
+    if (offsetY !== undefined) {
         tag(8, 5, s);
-        writeFloat32(sticker.offset_y, s);
+        writeFloat32(offsetY, s);
     }
 
-    if (sticker.offset_z !== undefined) {
+    const offsetZ = sticker.offset_z ?? sticker.offsetZ;
+    if (offsetZ !== undefined) {
         tag(9, 5, s);
-        writeFloat32(sticker.offset_z, s);
+        writeFloat32(offsetZ, s);
     }
 
     if (sticker.pattern !== undefined) {
@@ -100,14 +104,16 @@ function encodeSticker(sticker) {
         writeVarint(sticker.pattern, s);
     }
 
-    if (sticker.highlight_reel !== undefined) {
+    const highlightReel = sticker.highlight_reel ?? sticker.highlightReel;
+    if (highlightReel !== undefined) {
         tag(11, 0, s);
-        writeVarint(sticker.highlight_reel, s);
+        writeVarint(highlightReel, s);
     }
 
-    if (sticker.wrapped_sticker !== undefined) {
+    const wrappedSticker = sticker.wrapped_sticker ?? sticker.wrappedSticker;
+    if (wrappedSticker !== undefined) {
         tag(12, 0, s);
-        writeVarint(sticker.wrapped_sticker, s);
+        writeVarint(wrappedSticker, s);
     }
 
     return s;
