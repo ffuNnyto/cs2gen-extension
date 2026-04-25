@@ -42,13 +42,16 @@ function sendTabMessage(data) {
 chrome.runtime.onMessage.addListener((message, sender, sendResponse) => {
     if (message.action === "fetch_skin") {
         try {
-           
+
             const econ = decodeLink(message.url);
-            const hex = generateHex(econ);
+            const { inventory, origin, itemid, ...rest } = econ
+            const hex = generateHex(rest);
+
             console.log(`Generated hex: ${hex}`);
+
             sendResponse({ code: `!g ${hex}` });
         } catch (err) {
-        
+
             sendResponse({ error: err.toString() });
         }
     }
