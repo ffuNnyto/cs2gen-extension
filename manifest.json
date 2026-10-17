@@ -1,0 +1,136 @@
+{
+    "background": {
+        "service_worker": "dist/background.js",
+        "type": "module"
+    },
+    "content_scripts": [
+        {
+            "matches": [
+                "https://csfloat.com/*"
+            ],
+            "all_frames": true,
+            "js": [
+                "src/util/toast.js",
+                "src/util/utils.js",
+                "src/content_scripts/csfloat/csfloat.js",
+                "src/content_scripts/csfloat/csfloat_db.js"
+            ],
+            "css": [
+                "src/css/main.css"
+            ]
+        },
+        {
+            "matches": [
+                "https://buff.163.com/*"
+            ],
+            "all_frames": true,
+            "js": [
+                "src/util/request.js",
+                "src/util/toast.js",
+                "src/util/utils.js",
+                "src/content_scripts/buff163/buff163.js"
+            ],
+            "css": [
+                "src/css/main.css"
+            ]
+        },
+        {
+            "matches": [
+                "https://steamcommunity.com/id/*/inventory/*",
+                "https://steamcommunity.com/profiles/*/inventory/*"
+            ],
+            "all_frames": true,
+            "js": [
+                "src/util/toast.js",
+                "src/util/utils.js",
+                "src/content_scripts/steam/steam.js"
+            ],
+            "css": [
+                "src/css/main.css"
+            ]
+        },
+        {
+            "matches": [
+                "https://skinswap.com/*"
+            ],
+            "all_frames": true,
+            "js": [
+                "src/util/toast.js",
+                "src/util/utils.js",
+                "src/content_scripts/skinswap/skinswap.js"
+            ],
+            "css": [
+                "src/css/main.css"
+            ]
+        },
+        {
+            "matches": [
+                "https://cs.money/*"
+            ],
+            "js": [
+                "src/util/toast.js",
+                "src/util/utils.js",
+                "src/content_scripts/csmoney/csmoney.js"
+            ],
+            "css": [
+                "src/css/main.css"
+            ]
+        },
+        {
+            "matches": [
+                "https://cs.money/*"
+            ],
+            "js": [
+                "src/content_scripts/csmoney/csmoney_hook.js"
+            ],
+            "run_at": "document_start",
+            "world": "MAIN"
+        },
+        {
+            "matches": [
+                "https://buff.market/*"
+            ],
+            "js": [
+                "src/content_scripts/buffmarket/buffmarket_hook.js"
+            ],
+            "run_at": "document_start",
+            "world": "MAIN"
+        },
+        {
+            "matches": [
+                "https://buff.market/*"
+            ],
+            "js": [
+                "src/util/toast.js",
+                "src/util/utils.js",
+                "src/content_scripts/buffmarket/buffmarket.js"
+            ],
+            "css": [
+                "src/css/main.css"
+            ]
+        }
+    ],
+    "description": "CS2 copy !gen command",
+    "host_permissions": [
+        "*://*.csfloat.com/*",
+        "*://*.buff.163.com/*",
+        "*://*.steamcommunity.com/*",
+        "*://*.skinswap.com/*",
+        "*://*.cs.money/*",
+        "*://*.buff.market/*"
+    ],
+    "icons": {
+        "16": "src/icon-16.png",
+        "48": "src/icon-48.png",
+        "128": "src/icon-128.png"
+    },
+    "manifest_version": 3,
+    "name": "CS2 copy !gen",
+    "permissions": [
+        "tabs",
+        "webNavigation",
+        "declarativeNetRequest",
+        "declarativeNetRequestWithHostAccess"
+    ],
+    "version": "2.0.0"
+}

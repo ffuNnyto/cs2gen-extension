@@ -22,8 +22,6 @@ chrome.webNavigation.onCompleted.addListener(
             } else if (url.pathname === '/db') {
                 sendTabMessage({ action: 'csfloat_db_loaded', url: details.url });
             }
-        } else if (url.host === 'bitskins.com') {
-            sendTabMessage({ action: 'bitskins_loaded', url: details.url });
         } else if (url.host === 'buff.163.com' && url.pathname.includes('goods')) {
             sendTabMessage({ action: 'buff163_loaded', url: details.url });
         }

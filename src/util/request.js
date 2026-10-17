@@ -2,7 +2,7 @@ async function buffRequest(assetId, callBack) {
     try {
         const response = await fetch(`https://buff.163.com/api/market/cs2_inspect?assetid=${assetId}&_=1`);
         if (!response.ok) {
-            throwToast("Error at creating GEN CODE");
+            throwToast("Could not generate the !gen code.", "error");
             throw new Error('Invalid request ' + response.status);
         }
 

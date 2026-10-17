@@ -8,10 +8,10 @@ A Chrome extension that adds a **`!gen` copy button** to CS2 skin marketplaces, 
 |------|--------|
 | [CSFloat](https://csfloat.com) — `/search`, `/watchlist`, `/db` | ✅ |
 | [Buff163](https://buff.163.com) | ✅ |
-| [BitSkins](https://bitskins.com) | ⚠️ |
+| [BUFF Market](https://buff.market) — `/market/goods/*` | ✅ |
+| [SkinSwap](https://skinswap.com) — `/skins/*` | ✅ |
+| [CS.MONEY](https://cs.money) — `/csgo/trade`, `/market/buy` | ✅ |
 | [Steam Inventory](https://steamcommunity.com/*/inventory) | ✅ |
-
-> ⚠️ BitSkins support is partial — only items with an active inspect link available in the item menu will work.
 
 ## How It Works
 
@@ -60,8 +60,14 @@ src/
 │   │   └── csfloat_db.js          # /db table button injection
 │   ├── buff163/
 │   │   └── buff163.js             # Buff163 market button injection
-│   ├── bitskins/
-│   │   └── bitskins.js            # BitSkins market button injection
+│   ├── buffmarket/
+│   │   ├── buffmarket.js          # BUFF Market button injection
+│   │   └── buffmarket_hook.js     # Page-context hook that maps floats to asset ids
+│   ├── csmoney/
+│   │   ├── csmoney.js             # CS.MONEY trade & market button injection
+│   │   └── csmoney_hook.js        # Page-context hook that captures list API inspect links
+│   ├── skinswap/
+│   │   └── skinswap.js            # SkinSwap market button injection
 │   └── steam/
 │       └── steam.js               # Steam inventory button injection
 ```

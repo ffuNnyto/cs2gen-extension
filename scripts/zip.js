@@ -12,6 +12,9 @@ const include = [
     { disk: 'src/util',                 zip: 'src/util' },
     { disk: 'src/css',                  zip: 'src/css' },
     { disk: 'src/icon.png',             zip: 'src/icon.png' },
+    { disk: 'src/icon-16.png',          zip: 'src/icon-16.png' },
+    { disk: 'src/icon-48.png',          zip: 'src/icon-48.png' },
+    { disk: 'src/icon-128.png',         zip: 'src/icon-128.png' },
 ];
 
 for (const { disk, zip: zipPath } of include) {
