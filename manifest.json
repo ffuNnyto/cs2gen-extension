@@ -10,6 +10,7 @@
             ],
             "all_frames": true,
             "js": [
+                "src/util/settings.js",
                 "src/util/toast.js",
                 "src/util/utils.js",
                 "src/content_scripts/csfloat/csfloat.js",
@@ -25,6 +26,7 @@
             ],
             "all_frames": true,
             "js": [
+                "src/util/settings.js",
                 "src/util/request.js",
                 "src/util/toast.js",
                 "src/util/utils.js",
@@ -41,6 +43,7 @@
             ],
             "all_frames": true,
             "js": [
+                "src/util/settings.js",
                 "src/util/toast.js",
                 "src/util/utils.js",
                 "src/content_scripts/steam/steam.js"
@@ -55,6 +58,7 @@
             ],
             "all_frames": true,
             "js": [
+                "src/util/settings.js",
                 "src/util/toast.js",
                 "src/util/utils.js",
                 "src/content_scripts/skinswap/skinswap.js"
@@ -68,6 +72,7 @@
                 "https://cs.money/*"
             ],
             "js": [
+                "src/util/settings.js",
                 "src/util/toast.js",
                 "src/util/utils.js",
                 "src/content_scripts/csmoney/csmoney.js"
@@ -101,6 +106,7 @@
                 "https://buff.market/*"
             ],
             "js": [
+                "src/util/settings.js",
                 "src/util/toast.js",
                 "src/util/utils.js",
                 "src/content_scripts/buffmarket/buffmarket.js"
@@ -130,7 +136,17 @@
         "tabs",
         "webNavigation",
         "declarativeNetRequest",
-        "declarativeNetRequestWithHostAccess"
+        "declarativeNetRequestWithHostAccess",
+        "storage"
     ],
-    "version": "2.0.0"
+    "version": "2.1.0",
+    "action": {
+        "default_title": "CS2 copy !gen",
+        "default_popup": "src/popup/popup.html",
+        "default_icon": {
+            "16": "src/icon-16.png",
+            "48": "src/icon-48.png",
+            "128": "src/icon-128.png"
+        }
+    }
 }

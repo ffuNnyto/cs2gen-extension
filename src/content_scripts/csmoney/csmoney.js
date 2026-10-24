@@ -17,6 +17,8 @@ function csmoneyReady() {
 }
 
 function addCsmoneyButtons(root) {
+    if (!cs2genSiteEnabled('csmoney')) return;
+
     root.querySelectorAll(CSMONEY_CARD_SELECTOR).forEach((card) => {
         if (card.querySelector(':scope > .gen-btn')) return;
 
@@ -139,4 +141,4 @@ function generateCode(inspectLink) {
     });
 }
 
-csmoneyReady();
+cs2genSettingsReady.then(csmoneyReady);

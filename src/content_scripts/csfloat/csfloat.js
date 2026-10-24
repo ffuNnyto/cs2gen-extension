@@ -42,6 +42,7 @@ function handleMutations(mutations) {
 }
 
 function addGenButton(itemCard, idx) {
+    if (!cs2genSiteEnabled('csfloat')) return;
     try {
         const detailButtons = itemCard.querySelector('.detail-buttons');
         if (!detailButtons || detailButtons.querySelector('.gen-btn')) return;

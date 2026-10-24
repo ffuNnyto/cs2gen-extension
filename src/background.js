@@ -1,5 +1,6 @@
 import { decodeHex, decodeLink } from "./econ/decode.js";
 import { generateHex } from "./econ/encode.js";
+import { findFade } from "./econ/fade.js";
 
 
 chrome.runtime.onInstalled.addListener(() => {
@@ -38,6 +39,11 @@ function sendTabMessage(data) {
 }
 
 chrome.runtime.onMessage.addListener((message, sender, sendResponse) => {
+    if (message.action === "fade_lookup") {
+        sendResponse({ fade: findFade(message.title, message.seed) ?? null });
+        return;
+    }
+
     if (message.action === "fetch_skin") {
         try {
 

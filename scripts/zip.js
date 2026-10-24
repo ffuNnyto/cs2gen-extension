@@ -10,6 +10,7 @@ const include = [
     { disk: 'dist',                     zip: 'dist' },
     { disk: 'src/content_scripts',      zip: 'src/content_scripts' },
     { disk: 'src/util',                 zip: 'src/util' },
+    { disk: 'src/popup',                zip: 'src/popup' },
     { disk: 'src/css',                  zip: 'src/css' },
     { disk: 'src/icon.png',             zip: 'src/icon.png' },
     { disk: 'src/icon-16.png',          zip: 'src/icon-16.png' },

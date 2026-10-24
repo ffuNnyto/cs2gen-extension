@@ -19,10 +19,13 @@ function skinswapReady() {
 }
 
 function addSkinswapButtons(root) {
+    if (!cs2genSiteEnabled('skinswap')) return;
+
     root.querySelectorAll(SKINSWAP_INSPECT_SELECTOR).forEach((link) => {
         const row = link.parentElement;
         const item = row?.parentElement;
-        if (!item || item.querySelector('.gen-actions')) return;
+        if (!item) return;
+        if (item.querySelector('.gen-actions')) return updateFadeBadge(row, item.querySelector('.gen-actions'));
 
         // read the href at click time: React may reuse this row for another item
         const currentHref = () => row.querySelector(SKINSWAP_INSPECT_SELECTOR)?.getAttribute('href');
@@ -46,11 +49,77 @@ function addSkinswapButtons(root) {
         const actions = document.createElement('div');
         actions.className = 'gen-actions';
         Object.assign(actions.style, { display: 'flex', alignItems: 'center', gap: '6px', flexShrink: '0' });
-        actions.append(genBtn, view3dBtn);
+        actions.append(genBtn);
+        if (cs2genFeatureEnabled('view3d')) actions.append(view3dBtn);
 
         // empty space between the instant badge and the price
         row.after(actions);
+        updateFadeBadge(row, actions);
     });
+}
+
+const FADE_LABELS = { fade: 'Fade', 'amber fade': 'Amber Fade', 'acid fade': 'Acid Fade' };
+const skinswapFadeCache = new Map();
+
+// Fade / Amber Fade / Acid Fade skins: show the fade percentage for the paint seed shown in the row.
+// Rows are reused by React, so this runs on every tick and only asks again when the seed changes.
+function updateFadeBadge(row, actions) {
+    if (!cs2genFeatureEnabled('fade')) return actions.querySelector('.gen-fade')?.remove();
+
+    const seed = readSkinswapSeed(row);
+    const title = document.querySelector('h1')?.textContent.trim();
+    const key = `${title}|${seed}`;
+    const badge = actions.querySelector('.gen-fade');
+
+    if (seed == null || !title) return badge?.remove();
+    if (badge?.dataset.key === key) return;
+
+    const show = (fade) => renderFadeBadge(actions, key, fade);
+    if (skinswapFadeCache.has(key)) return show(skinswapFadeCache.get(key));
+
+    try {
+        chrome.runtime.sendMessage({ action: 'fade_lookup', title, seed }, (response) => {
+            if (chrome.runtime.lastError) return;
+            skinswapFadeCache.set(key, response?.fade ?? null);
+            // the row may have been reused while waiting
+            if (readSkinswapSeed(row) === seed) show(response?.fade ?? null);
+        });
+    } catch (_) { }
+}
+
+function readSkinswapSeed(row) {
+    // first <p> is the float, second one the pattern ("Pattern / 274"), whatever the site language
+    const labels = [...row.querySelectorAll('p')].filter((p) => p.textContent.includes('/'));
+    const match = labels[1]?.textContent.match(/(\d+)\s*$/);
+    return match ? Number(match[1]) : null;
+}
+
+function renderFadeBadge(actions, key, fade) {
+    let badge = actions.querySelector('.gen-fade');
+    if (!fade) return badge?.remove();
+
+    if (!badge) {
+        badge = document.createElement('span');
+        badge.className = 'gen-fade';
+        Object.assign(badge.style, {
+            borderRadius: '12px',
+            fontSize: '12px',
+            fontWeight: '600',
+            padding: '2px 8px',
+            lineHeight: '16px',
+            whiteSpace: 'nowrap',
+        });
+        actions.prepend(badge);
+    }
+
+    const { percentage, ranking, mode } = fade;
+    const color = percentage >= 95 ? '#c084fc' : percentage >= 90 ? '#f472b6' : percentage >= 80 ? '#fb923c' : '#fbbf24';
+    badge.dataset.key = key;
+    badge.textContent = `${FADE_LABELS[mode] || 'Fade'} ${percentage}%`;
+    badge.title = ranking ? `Fade rank #${ranking}` : '';
+    badge.style.color = color;
+    badge.style.border = `1px solid ${color}`;
+    badge.style.background = `${color}1f`;
 }
 
 function createSkinswapButton(label) {
@@ -86,4 +155,4 @@ function handleSkinswapGenClick(btn, inspectLink) {
     });
 }
 
-skinswapReady();
+cs2genSettingsReady.then(skinswapReady);

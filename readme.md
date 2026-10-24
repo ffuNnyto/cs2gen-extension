@@ -9,9 +9,18 @@ A Chrome extension that adds a **`!gen` copy button** to CS2 skin marketplaces, 
 | [CSFloat](https://csfloat.com) — `/search`, `/watchlist`, `/db` | ✅ |
 | [Buff163](https://buff.163.com) | ✅ |
 | [BUFF Market](https://buff.market) — `/market/goods/*` | ✅ |
-| [SkinSwap](https://skinswap.com) — `/skins/*` | ✅ |
+| [SkinSwap](https://skinswap.com) — `/skins/*` (also shows Fade / Amber Fade / Acid Fade %) | ✅ |
 | [CS.MONEY](https://cs.money) — `/csgo/trade`, `/market/buy` | ✅ |
 | [Steam Inventory](https://steamcommunity.com/*/inventory) | ✅ |
+
+## Settings
+
+Click the extension icon to open the settings popup:
+
+- Turn the **`!gen` button on or off for each website**
+- Turn the **3D viewer button** and the **Fade percentage** badge (SkinSwap) on or off
+
+Switching a site off removes its buttons right away; switching one on needs a page reload. Settings are saved with `chrome.storage.sync`.
 
 ## How It Works
 
@@ -49,9 +58,12 @@ Then load the extension in Chrome:
 ```
 src/
 ├── background.js                  # Service worker — decodes inspect links, generates hex
+├── popup/                         # Settings popup (per-site toggles, 3D, fade)
+├── util/settings.js               # Shared settings (storage + defaults)
 ├── econ/
 │   ├── decode.js                  # Decodes inspect link → econ object
 │   ├── encode.js                  # Encodes econ object → hex
+│   ├── fade.js                    # Fade / Amber Fade / Acid Fade percentage lookup (by seed)
 │   ├── econ.js                    # Protobuf schema (CEconItemPreviewDataBlock)
 │   └── inspect-payload.js         # CRC32 checksum + float utils
 ├── content_scripts/

@@ -1,5 +1,5 @@
 function createGButton(node, idx) {
-    if (!node || node.querySelector('.db-class-gen')) return;
+    if (!cs2genSiteEnabled('csfloat') || !node || node.querySelector('.db-class-gen')) return;
 
     const inspectLink = node.querySelector('a[href^="steam"]')?.getAttribute('href');
     if (!inspectLink) return;

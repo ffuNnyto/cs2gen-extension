@@ -7,6 +7,8 @@ function steamInventory() {
     if (!targetDiv) return;
 
     new MutationObserver(() => {
+        if (!cs2genSiteEnabled('steam')) return;
+
         const itemInfo = getActiveItemInfo();
         if (!itemInfo) return;
 

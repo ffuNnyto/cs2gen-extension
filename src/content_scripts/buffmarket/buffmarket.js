@@ -23,6 +23,8 @@ function buffmarketReady() {
 }
 
 function addBuffmarketButtons(root) {
+    if (!cs2genSiteEnabled('buffmarket')) return;
+
     root.querySelectorAll(BUFFMARKET_ROW_SELECTOR).forEach((row) => {
         const view = row.querySelector('.view');
         if (!view || view.querySelector('.gen-btn')) return;
@@ -85,4 +87,4 @@ function generateCode(inspectLink) {
     });
 }
 
-buffmarketReady();
+cs2genSettingsReady.then(buffmarketReady);

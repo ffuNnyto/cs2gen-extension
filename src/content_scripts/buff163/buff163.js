@@ -36,6 +36,7 @@ function addButtonOnClickHandler(btn, idx, dataInfo) {
 
 function createButton(idx) {
     let btn = document.createElement('span');
+    btn.className = 'gen-btn';
 
     Object.assign(btn.style, {
         cursor: 'pointer',
@@ -63,6 +64,8 @@ function createButton(idx) {
 }
 
 function processTableRow(node, idx) {
+    if (!cs2genSiteEnabled('buff163')) return;
+
     if (node.nodeName === 'TR') {
         let dataInfo = node.getAttribute('data-asset-info');
         let btn = createButton(idx);
