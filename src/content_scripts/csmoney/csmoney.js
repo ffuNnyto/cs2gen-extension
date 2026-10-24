@@ -26,7 +26,6 @@ function addCsmoneyButtons(root) {
         btn.addEventListener('click', (e) => {
             e.preventDefault();
             e.stopPropagation();
-            // read the id at click time: the list is virtualized and cards get reused
             handleCsmoneyClick(btn, card);
         });
 
@@ -86,7 +85,6 @@ window.addEventListener('message', ({ source, data }) => {
     data.items.forEach(([id, link]) => csmoneyLinks.set(String(id), link));
 });
 
-
 function findInspectLinkInPage(assetId) {
     const json = document.getElementById('__page-params')?.textContent;
     if (!json) return null;
@@ -114,7 +112,6 @@ function collectInspectLinks(node, out) {
 
     Object.values(node).forEach((child) => collectInspectLinks(child, out));
 }
-
 
 async function fetchInspectLink(assetId, detailUrl) {
     if (!detailUrl) return null;

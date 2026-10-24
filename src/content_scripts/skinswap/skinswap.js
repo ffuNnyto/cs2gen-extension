@@ -14,7 +14,6 @@ function skinswapReady() {
         }, 100);
     }).observe(document.body, { childList: true, subtree: true, attributes: true, attributeFilter: ['href'] });
 
-    // safety net: SkinSwap re-renders rows on pagination/filter changes
     setInterval(() => addSkinswapButtons(document), 1000);
 }
 
@@ -27,7 +26,6 @@ function addSkinswapButtons(root) {
         if (!item) return;
         if (item.querySelector('.gen-actions')) return updateFadeBadge(row, item.querySelector('.gen-actions'));
 
-        // read the href at click time: React may reuse this row for another item
         const currentHref = () => row.querySelector(SKINSWAP_INSPECT_SELECTOR)?.getAttribute('href');
 
         const genBtn = createSkinswapButton('!gen');
@@ -52,7 +50,6 @@ function addSkinswapButtons(root) {
         actions.append(genBtn);
         if (cs2genFeatureEnabled('view3d')) actions.append(view3dBtn);
 
-        // empty space between the instant badge and the price
         row.after(actions);
         updateFadeBadge(row, actions);
     });
@@ -61,8 +58,6 @@ function addSkinswapButtons(root) {
 const FADE_LABELS = { fade: 'Fade', 'amber fade': 'Amber Fade', 'acid fade': 'Acid Fade' };
 const skinswapFadeCache = new Map();
 
-// Fade / Amber Fade / Acid Fade skins: show the fade percentage for the paint seed shown in the row.
-// Rows are reused by React, so this runs on every tick and only asks again when the seed changes.
 function updateFadeBadge(row, actions) {
     if (!cs2genFeatureEnabled('fade')) return actions.querySelector('.gen-fade')?.remove();
 
@@ -81,14 +76,12 @@ function updateFadeBadge(row, actions) {
         chrome.runtime.sendMessage({ action: 'fade_lookup', title, seed }, (response) => {
             if (chrome.runtime.lastError) return;
             skinswapFadeCache.set(key, response?.fade ?? null);
-            // the row may have been reused while waiting
             if (readSkinswapSeed(row) === seed) show(response?.fade ?? null);
         });
     } catch (_) { }
 }
 
 function readSkinswapSeed(row) {
-    // first <p> is the float, second one the pattern ("Pattern / 274"), whatever the site language
     const labels = [...row.querySelectorAll('p')].filter((p) => p.textContent.includes('/'));
     const match = labels[1]?.textContent.match(/(\d+)\s*$/);
     return match ? Number(match[1]) : null;

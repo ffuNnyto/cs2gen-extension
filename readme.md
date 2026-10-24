@@ -19,17 +19,26 @@ Click the extension icon to open the settings popup:
 
 - Turn the **`!gen` button on or off for each website**
 - Turn the **3D viewer button** and the **Fade percentage** badge (SkinSwap) on or off
+- Turn the **right-click menu** on or off: right-click any `steam://…` inspect link on any website and choose **Copy !gen**
+- Pick where the **notifications** appear and how long they stay
+- See your **recent codes** in the History tab and copy them again with one click
 
 Switching a site off removes its buttons right away; switching one on needs a page reload. Settings are saved with `chrome.storage.sync`.
 
 ## How It Works
 
-1. Browse any supported marketplace
+1. Browse any supported marketplace (or any site with an inspect link, see below)
 2. Click the **`!gen`** button on any skin listing
 3. The inspect command is automatically copied to your clipboard
 4. Paste it in-game: `!gen <hex>`
 
 The gen code is generated **fully locally** by decoding the item's inspect link using protobuf — no external API calls required.
+
+### On any other website
+
+The supported sites above get their own **`!gen`** button, but you are not limited to them. On **any website** that shows an inspect link (a `steam://…` link), right-click it and choose **Copy !gen**. The command is copied to your clipboard just like with the buttons.
+
+This works on every page, including sites that are not in the list. You can turn it off in the settings popup.
 
 ## Installation
 

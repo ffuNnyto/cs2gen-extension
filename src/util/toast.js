@@ -1,4 +1,4 @@
-const TOAST_DURATION = 4000;
+const TOAST_DEFAULT_SECONDS = 4;
 const TOAST_MAX_VISIBLE = 3;
 
 const TOAST_TYPES = {
@@ -22,6 +22,7 @@ const TOAST_TYPES = {
 const TOAST_STYLES = `
     :host { all: initial; }
     .stack {
+        --enter: 16px;
         position: fixed;
         top: 16px;
         right: 16px;
@@ -33,6 +34,8 @@ const TOAST_STYLES = `
         pointer-events: none;
         font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Inter, Roboto, sans-serif;
     }
+    .stack[data-pos$="left"] { --enter: -16px; right: auto; left: 16px; }
+    .stack[data-pos^="bottom"] { top: auto; bottom: 16px; }
     .toast {
         display: flex;
         align-items: flex-start;
@@ -45,11 +48,11 @@ const TOAST_STYLES = `
         color: #f3f4f6;
         pointer-events: auto;
         opacity: 0;
-        transform: translateX(16px);
+        transform: translateX(var(--enter));
         transition: opacity 0.2s ease, transform 0.25s ease;
     }
     .toast.show { opacity: 1; transform: none; }
-    .toast.hide { opacity: 0; transform: translateX(16px); }
+    .toast.hide { opacity: 0; transform: translateX(var(--enter)); }
     .icon { flex: none; width: 18px; height: 18px; margin-top: 1px; fill: none; stroke: var(--color); stroke-width: 2; stroke-linecap: round; stroke-linejoin: round; }
     .body { flex: 1; min-width: 0; }
     .title { font-size: 13px; font-weight: 600; line-height: 1.4; }
@@ -84,7 +87,6 @@ const TOAST_STYLES = `
 
 let toastStack = null;
 
-// The toasts live in a shadow root so the host page's CSS can't affect them.
 function createToastContainer() {
     if (toastStack?.isConnected) return toastStack;
 
@@ -102,18 +104,18 @@ function createToastContainer() {
     return toastStack;
 }
 
-// type: 'success' | 'error' | 'info'. detail is an optional monospace line (e.g. the generated code).
 function throwToast(message, type = 'success', detail = '') {
     const stack = createToastContainer();
+    const options = (typeof cs2genSettings !== 'undefined' && cs2genSettings.toast) || {};
+    stack.dataset.pos = options.position || 'top-right';
+    const seconds = Number(options.duration) || TOAST_DEFAULT_SECONDS;
     const config = TOAST_TYPES[type] || TOAST_TYPES.info;
 
-    // same toast already on screen (e.g. rapid repeated clicks): replace it instead of stacking
     const key = `${type}|${message}|${detail}`;
     stack.querySelectorAll('.toast').forEach((existing) => {
         if (existing.dataset.key === key) dismissToast(existing, true);
     });
 
-    // hiding toasts stay in the DOM for the exit animation, so only count the live ones
     const live = () => [...stack.children].filter((el) => !el.classList.contains('hide'));
     while (live().length >= TOAST_MAX_VISIBLE) dismissToast(live()[0]);
 
@@ -136,7 +138,7 @@ function throwToast(message, type = 'success', detail = '') {
     toast.querySelector('.message').textContent = message;
     if (detail) toast.querySelector('.detail').textContent = detail;
     toast.querySelector('.close').addEventListener('click', () => dismissToast(toast));
-    setTimeout(() => dismissToast(toast), TOAST_DURATION);
+    setTimeout(() => dismissToast(toast), seconds * 1000);
 
     stack.appendChild(toast);
     requestAnimationFrame(() => toast.classList.add('show'));

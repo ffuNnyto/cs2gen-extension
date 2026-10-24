@@ -2,7 +2,6 @@ const BUFFMARKET_ROW_SELECTOR = '.market-goods-sell-content';
 const buffmarketAssets = new Map();
 const buffmarketCodes = new Map();
 
-
 window.addEventListener('message', ({ source, data }) => {
     if (source !== window || data?.source !== 'cs2gen' || data.type !== 'buff-assets') return;
     data.items.forEach(([float, assetId]) => buffmarketAssets.set(float, assetId));

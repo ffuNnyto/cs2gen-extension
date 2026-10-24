@@ -1,6 +1,7 @@
 const CS2GEN_DEFAULTS = {
     sites: { csfloat: true, buff163: true, buffmarket: true, skinswap: true, csmoney: true, steam: true },
-    features: { view3d: true, fade: true },
+    features: { view3d: true, fade: true, contextMenu: true },
+    toast: { position: 'top-right', duration: 4 },
 };
 
 const CS2GEN_HOSTS = {
@@ -12,7 +13,6 @@ const CS2GEN_HOSTS = {
     'steamcommunity.com': 'steam',
 };
 
-// everything the content scripts inject, so it can be removed when a site gets switched off
 const CS2GEN_INJECTED = '.gen-btn, .gen-actions, .gen-fade, .db-class-gen, .gen-steam-btn';
 
 let cs2genSettings = structuredClone(CS2GEN_DEFAULTS);
@@ -21,10 +21,10 @@ function cs2genMerge(saved) {
     return {
         sites: { ...CS2GEN_DEFAULTS.sites, ...saved?.sites },
         features: { ...CS2GEN_DEFAULTS.features, ...saved?.features },
+        toast: { ...CS2GEN_DEFAULTS.toast, ...saved?.toast },
     };
 }
 
-// resolves once the saved settings are loaded; until then everything counts as enabled
 const cs2genSettingsReady = new Promise((resolve) => {
     try {
         chrome.storage.sync.get('settings', ({ settings }) => {
@@ -54,7 +54,6 @@ try {
         if (area !== 'sync' || !changes.settings) return;
         cs2genSettings = cs2genMerge(changes.settings.newValue);
 
-        // site switched off: take its buttons off the page right away (switching on needs a reload)
         const site = CS2GEN_HOSTS[location.hostname.replace(/^www\./, '')];
         if (site && !cs2genSiteEnabled(site)) {
             document.querySelectorAll(CS2GEN_INJECTED).forEach((el) => el.remove());

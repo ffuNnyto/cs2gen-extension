@@ -137,7 +137,10 @@
         "webNavigation",
         "declarativeNetRequest",
         "declarativeNetRequestWithHostAccess",
-        "storage"
+        "storage",
+        "contextMenus",
+        "activeTab",
+        "scripting"
     ],
     "version": "2.1.0",
     "action": {

@@ -15,21 +15,66 @@
         </div>
     </header>
 
-    <section>
-        <h2>Websites</h2>
-        <label class="row"><span class="name">CSFloat<small>csfloat.com</small></span><input type="checkbox" data-group="sites" data-key="csfloat"><i></i></label>
-        <label class="row"><span class="name">BUFF163<small>buff.163.com</small></span><input type="checkbox" data-group="sites" data-key="buff163"><i></i></label>
-        <label class="row"><span class="name">BUFF Market<small>buff.market</small></span><input type="checkbox" data-group="sites" data-key="buffmarket"><i></i></label>
-        <label class="row"><span class="name">SkinSwap<small>skinswap.com</small></span><input type="checkbox" data-group="sites" data-key="skinswap"><i></i></label>
-        <label class="row"><span class="name">CS.MONEY<small>cs.money</small></span><input type="checkbox" data-group="sites" data-key="csmoney"><i></i></label>
-        <label class="row"><span class="name">Steam inventory<small>steamcommunity.com</small></span><input type="checkbox" data-group="sites" data-key="steam"><i></i></label>
-    </section>
+    <nav class="tabs" role="tablist">
+        <button type="button" role="tab" id="tab-settings-btn" data-tab="settings" aria-controls="tab-settings" aria-selected="true">Settings</button>
+        <button type="button" role="tab" id="tab-history-btn" data-tab="history" aria-controls="tab-history" aria-selected="false">History</button>
+    </nav>
 
-    <section>
-        <h2>Extras</h2>
-        <label class="row"><span class="name">3D viewer button<small>SkinSwap</small></span><input type="checkbox" data-group="features" data-key="view3d"><i></i></label>
+    <main>
+        <div id="tab-settings" role="tabpanel" aria-labelledby="tab-settings-btn">
+            <section>
+                <h2>Websites</h2>
+                <label class="row"><span class="name">CSFloat<small>csfloat.com</small></span><input type="checkbox" data-group="sites" data-key="csfloat"><i></i></label>
+                <label class="row"><span class="name">BUFF163<small>buff.163.com</small></span><input type="checkbox" data-group="sites" data-key="buff163"><i></i></label>
+                <label class="row"><span class="name">BUFF Market<small>buff.market</small></span><input type="checkbox" data-group="sites" data-key="buffmarket"><i></i></label>
+                <label class="row"><span class="name">SkinSwap<small>skinswap.com</small></span><input type="checkbox" data-group="sites" data-key="skinswap"><i></i></label>
+                <label class="row"><span class="name">CS.MONEY<small>cs.money</small></span><input type="checkbox" data-group="sites" data-key="csmoney"><i></i></label>
+                <label class="row"><span class="name">Steam inventory<small>steamcommunity.com</small></span><input type="checkbox" data-group="sites" data-key="steam"><i></i></label>
+            </section>
+
+            <section>
+                <h2>Extras</h2>
+                <label class="row"><span class="name">Right-click menu<small>Copy !gen on any inspect link</small></span><input type="checkbox" data-group="features" data-key="contextMenu"><i></i></label>
+                <label class="row"><span class="name">3D viewer button<small>SkinSwap</small></span><input type="checkbox" data-group="features" data-key="view3d"><i></i></label>
         <label class="row"><span class="name">Fade percentage<small>SkinSwap · Fade, Amber Fade, Acid Fade</small></span><input type="checkbox" data-group="features" data-key="fade"><i></i></label>
-    </section>
+            </section>
+
+            <section>
+                <h2>Notifications</h2>
+                <div class="field">
+                    <span class="name">Position</span>
+                    <div class="segments" id="position">
+                        <button type="button" data-value="top-left">Top left</button>
+                        <button type="button" data-value="top-right">Top right</button>
+                        <button type="button" data-value="bottom-left">Bottom left</button>
+                        <button type="button" data-value="bottom-right">Bottom right</button>
+                    </div>
+                </div>
+                <div class="field inline">
+                    <span class="name">Duration</span>
+                    <select id="duration">
+                        <option value="2">2 seconds</option>
+                        <option value="4">4 seconds</option>
+                        <option value="6">6 seconds</option>
+                        <option value="10">10 seconds</option>
+                    </select>
+                </div>
+            </section>
+
+            <button id="reset" class="link" type="button">Reset settings</button>
+        </div>
+
+        <div id="tab-history" role="tabpanel" aria-labelledby="tab-history-btn" hidden>
+            <section>
+                <ul id="history"></ul>
+                <div id="history-empty" class="empty">
+                    <strong>No codes yet</strong>
+                    <span>The !gen codes you copy will show up here.</span>
+                </div>
+            </section>
+            <button id="clear-history" class="link" type="button" hidden>Clear history</button>
+        </div>
+    </main>
 
     <footer>
         <p id="hint" hidden>Reload the page to apply the changes.</p>
